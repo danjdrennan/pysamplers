@@ -90,10 +90,9 @@ def rejection_sampler(
     # the total number of samples drawn and a warning that we exited early
     k = 0
 
-    # Define a simple helper for comparisons
     def proposal(x):
-        s = f(x)
-        return s, s / (M * g.density(x))
+        """Helper to get values of f(x) and f(x) / M * g(x)"""
+        return  f(x) / (M * g.density(x))
 
     # Now ready to implement rejection sampling
     # f is the target density, g is the proposal distribution
@@ -108,9 +107,9 @@ def rejection_sampler(
         u = uniform().rvs()
 
         # Rejection sampling: compare a uniform random variable with f(x) / (M * g(x))
-        s, p = proposal(x)
-        if u <= p:
-            samples[n] = s
+        # If u <= f(x) / (M * g(x)), accept x as a sample from f
+        if u <= proposal(x):
+            samples[n] = x
             n += 1
 
     return samples
